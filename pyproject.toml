@@ -1,0 +1,28 @@
+[project]
+name = "ecom-fastapi"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "alok-raj",email = "Alok.Raj@mindfiresolutions.com"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+
+[tool.poetry]
+package-mode = false
+
+[tool.poetry.dependencies]
+fastapi = "^0.119.1"
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+dependencies = []
+[dependency-groups]
+dev = [
+    "uvicorn[standard] (>=0.38.0,<0.39.0)",
+    "poethepoet (>=0.37.0,<0.38.0)"
+]
+
+[tool.poe.tasks]
+dev = "uvicorn app.main:app --reload"
+
