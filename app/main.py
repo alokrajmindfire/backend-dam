@@ -1,15 +1,10 @@
-from typing import Union
-
 from fastapi import FastAPI
-
-app = FastAPI()
-
+from app.config.dbconf import SessionLocal
+app = FastAPI(title="User CRUD API")
+# app.include_router(user_routes.router)
 
 @app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+def root():
+    db = SessionLocal()
+    print("db",db.connection)
+    return {"message": "User CRUD API is running!"}
