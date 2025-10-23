@@ -13,8 +13,6 @@ user_model.Base.metadata.create_all(bind=engine)
 def root():
     db = SessionLocal()
     try:
-        result = db.execute(text("SELECT 1")).scalar()
-        print("DB connected, test query result:", result)
         return {"message": "User CRUD API is running!"}
     finally:
         db.close()
