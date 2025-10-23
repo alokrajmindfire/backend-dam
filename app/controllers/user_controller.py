@@ -1,42 +1,57 @@
 from sqlalchemy.orm import Session
-from app.models.user_model import User
+from app.repositories.user_repository import UserRepository
 from app.schemas.user_schema import UserCreate, UserUpdate
+from app.config.logger import logger
 
 class UserController:
     def __init__(self, db: Session):
-        self.db = db
+        self.user_repository = UserRepository(db)
 
     def get_users(self):
-        return self.db.query(User).all()
+        try:
+            users = self.user_repository.get_all()
+            logger.info("Controller: returned all users.")
+            return users
+        except Exception as e:
+            logger.error(f"Controller error in get_users: {e}")
+            raise
 
     def get_user(self, user_id: int):
-        return self.db.query(User).filter(User.id == user_id).first()
+        try:
+            user = self.user_repository.get_by_id(user_id)
+            if not user:
+                logger.warning(f"Controller: user {user_id} not found.")
+            return user
+        except Exception as e:
+            logger.error(f"Controller error in get_user({user_id}): {e}")
+            raise
 
     def create_user(self, user_create: UserCreate):
-        user = User(
-            email=user_create.email,
-            full_name=user_create.full_name,
-            password=user_create.password
-        )
-        self.db.add(user)
-        self.db.commit()
-        self.db.refresh(user)
-        return user
+        try:
+            logger.info(f"Controller: creating user {user_create.email}")
+            return self.user_repository.create(user_create)
+        except Exception as e:
+            logger.error(f"Controller error in create_user: {e}")
+            raise
 
     def update_user(self, user_id: int, user_update: UserUpdate):
-        user = self.get_user(user_id)
-        if not user:
-            return None
-        for key, value in user_update.dict().items():
-            setattr(user, key, value)
-        self.db.commit()
-        self.db.refresh(user)
-        return user
+        try:
+            user = self.user_repository.get_by_id(user_id)
+            if not user:
+                logger.warning(f"Controller: user {user_id} not found for update.")
+                return None
+            return self.user_repository.update(user, user_update)
+        except Exception as e:
+            logger.error(f"Controller error in update_user({user_id}): {e}")
+            raise
 
     def delete_user(self, user_id: int):
-        user = self.get_user(user_id)
-        if not user:
-            return None
-        self.db.delete(user)
-        self.db.commit()
-        return user
+        try:
+            user = self.user_repository.get_by_id(user_id)
+            if not user:
+                logger.warning(f"Controller: user {user_id} not found for deletion.")
+                return None
+            return self.user_repository.delete(user)
+        except Exception as e:
+            logger.error(f"Controller error in delete_user({user_id}): {e}")
+            raise
