@@ -16,6 +16,7 @@ fastapi = "^0.119.1"
 sqlalchemy = "^2.0.44"
 psycopg2 = "^2.9.11"
 pydantic = {extras = ["email"], version = "^2.12.3"}
+alembic = "^1.17.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
