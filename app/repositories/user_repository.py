@@ -3,7 +3,7 @@ from app.models.user_model import User
 from app.schemas.user_schema import UserCreate, UserUpdate
 from app.config.logger import logger
 from fastapi import HTTPException, status
-from app.config.hashing import Hasher
+from app.utils.hashing import Hasher
 
 class UserRepository:
     def __init__(self, db: Session):

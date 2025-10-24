@@ -4,6 +4,7 @@ from fastapi import HTTPException
 from app.config.dbconf import SessionLocal
 from app.controllers.user_controller import UserController
 from app.schemas.user_schema import UserCreate, UserUpdate, UserResponse
+from app.middleware.auth_middleware import get_current_user
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
