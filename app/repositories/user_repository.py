@@ -3,6 +3,7 @@ from app.models.user_model import User
 from app.schemas.user_schema import UserCreate, UserUpdate
 from app.config.logger import logger
 from fastapi import HTTPException, status
+from app.config.hashing import Hasher
 
 class UserRepository:
     def __init__(self, db: Session):
@@ -39,7 +40,7 @@ class UserRepository:
             user = User(
                 email=user_create.email,
                 full_name=user_create.full_name,
-                password=user_create.password
+                password=Hasher.get_password_hash(user_create.password)
             )
             self.db.add(user)
             self.db.commit()
