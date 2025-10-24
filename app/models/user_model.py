@@ -1,8 +1,8 @@
 from sqlalchemy import Column, DateTime, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
+from sqlalchemy.orm import relationship
 
-Base = declarative_base()
+from app.models.base import Base
 
 class User(Base):
     __tablename__ = "users"
@@ -13,3 +13,4 @@ class User(Base):
     password = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    blogs = relationship("Blog",back_populates="author")
