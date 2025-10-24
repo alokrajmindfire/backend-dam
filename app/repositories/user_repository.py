@@ -40,7 +40,7 @@ class UserRepository:
             user = User(
                 email=user_create.email,
                 full_name=user_create.full_name,
-                password=Hasher.get_password_hash(user_create.password)
+                password=user_create.password
             )
             self.db.add(user)
             self.db.commit()
