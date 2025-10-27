@@ -18,6 +18,10 @@ poetry install
 
 ```bash
 poetry env activate
+
+**For windows**
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.venv\Scripts\activate.ps1
 ```
 
 4. **Run the app:**
