@@ -62,21 +62,6 @@ def get_user(user_id: int, db: Session = Depends(get_db),current_user: UserRespo
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-@router.post("/", response_model=UserResponse)
-def create_user(user_create: UserCreate, db: Session = Depends(get_db),current_user: UserResponse = Depends(get_current_user)):
-    """
-    Create a new user record in the database.
-
-    Args:
-        user_create (UserCreate): Schema containing user creation data (e.g., email, password).
-        db (Session): Database session provided by the dependency injection system.
-
-    Returns:
-        UserResponse: The newly created user's details.
-    """
-    controller = UserController(db)
-    return controller.create_user(user_create)
-
 @router.put("/{user_id}", response_model=UserResponse)
 def update_user(user_id: int, user_update: UserUpdate, db: Session = Depends(get_db),current_user: UserResponse = Depends(get_current_user)):
     """

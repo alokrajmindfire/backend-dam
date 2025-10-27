@@ -4,6 +4,8 @@ from app.config.dbconf import SessionLocal
 from app.controllers.auth_controller import authenticate_user, create_access_token
 from app.schemas.auth_schema import Token, LoginSchema
 from app.config.config import settings
+from app.schemas.user_schema import UserCreate, UserUpdate, UserResponse
+from app.controllers.user_controller import UserController
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -35,3 +37,32 @@ def login(response: Response, payload: LoginSchema, db: Session = Depends(get_db
         max_age=60 * settings.ACCESS_TOKEN_EXPIRE_MINUTES,
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.post("/register", response_model=UserResponse)
+def create_user(user_create: UserCreate, db: Session = Depends(get_db)):
+    """
+    Create a new user record in the database.
+
+    Args:
+        user_create (UserCreate): Schema containing user creation data (e.g., email, password).
+        db (Session): Database session provided by the dependency injection system.
+
+    Returns:
+        UserResponse: The newly created user's details.
+    """
+    controller = UserController(db)
+    return controller.create_user(user_create)
+
+@router.post("/logout")
+def logout(response: Response):
+    """
+    Log out the user by deleting the JWT cookie.
+    """
+    response.delete_cookie(
+        key="access_token",
+        httponly=True,
+        secure=False,
+        samesite="lax",
+    )
+    return {"message": "Successfully logged out"}
