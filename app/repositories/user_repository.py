@@ -6,10 +6,28 @@ from fastapi import HTTPException, status
 from app.config.hashing import Hasher
 
 class UserRepository:
+    """
+    Repository class for performing CRUD operations on the User model.
+    """
     def __init__(self, db: Session):
+        """
+        Initialize the UserRepository with a SQLAlchemy session.
+
+        Args:
+            db (Session): SQLAlchemy database session for performing queries.
+        """
         self.db = db
 
     def get_all(self):
+        """
+        Retrieve all users from the database.
+
+        Returns:
+            list[User]: A list of all User objects stored in the database.
+
+        Raises:
+            Exception: If a database or query error occurs.
+        """
         try:
             users = self.db.query(User).all()
             logger.info("Fetched all users from database.")
@@ -19,6 +37,18 @@ class UserRepository:
             raise
 
     def get_by_id(self, user_id: int):
+        """
+        Retrieve a single user by their ID.
+
+        Args:
+            user_id (int): The ID of the user to fetch.
+
+        Returns:
+            User | None: The User object if found, otherwise None.
+
+        Raises:
+            Exception: If a database error occurs during the query.
+        """
         try:
             user = self.db.query(User).filter(User.id == user_id).first()
             if not user:
@@ -29,6 +59,19 @@ class UserRepository:
             raise
 
     def create(self, user_create: UserCreate):
+        """
+        Create a new user in the database.
+
+        Args:
+            user_create (UserCreate): A Pydantic schema containing the user data (email, full_name, password, etc).
+
+        Returns:
+            User: The newly created User object.
+
+        Raises:
+            HTTPException: If a user with the given email already exists.
+            Exception: If there’s an unexpected error during user creation.
+        """
         try:
             existing_user = self.db.query(User).filter(User.email == user_create.email).first()
             if existing_user:
@@ -53,6 +96,19 @@ class UserRepository:
             raise
 
     def update(self, user: User, user_update: UserUpdate):
+        """
+        Update an existing user's details.
+
+        Args:
+            user (User): The existing User object to update.
+            user_update (UserUpdate): A Pydantic model with updated user fields.
+
+        Returns:
+            User: The updated User object after committing changes.
+
+        Raises:
+            Exception: If a database error occurs during the update.
+        """
         try:
             for key, value in user_update.dict().items():
                 setattr(user, key, value)
@@ -66,6 +122,18 @@ class UserRepository:
             raise
 
     def delete(self, user: User):
+        """
+        Delete a user from the database.
+
+        Args:
+            user (User): The User object to delete.
+
+        Returns:
+            User: The deleted User object (for confirmation or logging).
+
+        Raises:
+            Exception: If a database error occurs during deletion.
+        """
         try:
             self.db.delete(user)
             self.db.commit()

@@ -4,10 +4,12 @@ from app.schemas.blog_schema import BlogCreate, BlogUpdate
 from app.config.logger import logger
 
 class BlogController:
+    """Blog Controller to manage crud"""
     def __init__(self, db: Session):
         self.blog_repository = BlogRepository(db)
 
     def get_blogs(self):
+        """Return all blogs."""
         try:
             blogs = self.blog_repository.get_all()
             logger.info("Controller: returned all blogs.")
@@ -17,6 +19,7 @@ class BlogController:
             raise
 
     def get_blog(self, blog_id: int):
+        """Return a single blog by ID."""
         try:
             blog = self.blog_repository.get_by_id(blog_id)
             if not blog:
@@ -27,6 +30,7 @@ class BlogController:
             raise
 
     def create_blog(self, blog_create: BlogCreate):
+        """Create a new blog entry."""
         try:
             logger.info(f"Controller: creating blog {blog_create.title}")
             return self.blog_repository.create(blog_create)
@@ -35,6 +39,7 @@ class BlogController:
             raise
 
     def update_blog(self, blog_id: int, blog_update: BlogUpdate):
+        """Update an existing blog."""
         try:
             blog = self.blog_repository.get_by_id(blog_id)
             if not blog:
@@ -46,6 +51,7 @@ class BlogController:
             raise
 
     def delete_blog(self, blog_id: int):
+        """Delete a blog entry."""
         try:
             blog = self.blog_repository.get_by_id(blog_id)
             if not blog:
