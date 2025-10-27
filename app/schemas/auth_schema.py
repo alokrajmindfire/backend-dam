@@ -2,11 +2,11 @@ from pydantic import BaseModel
 
 class Token(BaseModel):
     access_token: str
-    token_type: str = "bearer"
+    token_type: str
 
 class TokenData(BaseModel):
     email: str | None = None
 
-class UserLogin(BaseModel):
+class LoginSchema(BaseModel):
     email: str
     password: str
