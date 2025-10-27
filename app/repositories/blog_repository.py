@@ -83,7 +83,6 @@ class BlogRepository:
                 slug=blog_create.slug,
                 content=blog_create.content,
                 author_id=blog_create.author_id,
-                is_active=blog_create.is_active
             )
             self.db.add(blog)
             self.db.commit()

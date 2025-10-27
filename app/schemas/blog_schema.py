@@ -6,7 +6,6 @@ class BlogBase(BaseModel):
     title: str
     slug: str
     content: Optional[str] = None
-    is_active: Optional[bool] = False
 
 class BlogCreate(BlogBase):
     author_id: int
@@ -15,7 +14,6 @@ class BlogUpdate(BaseModel):
     title: Optional[str] = None
     slug: Optional[str] = None
     content: Optional[str] = None
-    is_active: Optional[bool] = None
 
 class BlogResponse(BlogBase):
     id: int
