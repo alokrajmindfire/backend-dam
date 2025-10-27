@@ -8,6 +8,7 @@ class UserController:
         self.user_repository = UserRepository(db)
 
     def get_users(self):
+        """Return all users."""
         try:
             users = self.user_repository.get_all()
             logger.info("Controller: returned all users.")
@@ -17,6 +18,7 @@ class UserController:
             raise
 
     def get_user(self, user_id: int):
+        """Return a single user by ID."""
         try:
             user = self.user_repository.get_by_id(user_id)
             if not user:
@@ -27,6 +29,7 @@ class UserController:
             raise
 
     def create_user(self, user_create: UserCreate):
+        """Create a new user entry."""
         try:
             logger.info(f"Controller: creating user {user_create.email}")
             return self.user_repository.create(user_create)
@@ -35,6 +38,7 @@ class UserController:
             raise
 
     def update_user(self, user_id: int, user_update: UserUpdate):
+        """Update an existing user."""
         try:
             user = self.user_repository.get_by_id(user_id)
             if not user:
@@ -46,6 +50,7 @@ class UserController:
             raise
 
     def delete_user(self, user_id: int):
+        """Delete a user entry."""
         try:
             user = self.user_repository.get_by_id(user_id)
             if not user:
