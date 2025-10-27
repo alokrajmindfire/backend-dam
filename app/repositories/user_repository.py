@@ -3,7 +3,7 @@ from app.models.user_model import User
 from app.schemas.user_schema import UserCreate, UserUpdate
 from app.config.logger import logger
 from fastapi import HTTPException, status
-from app.config.hashing import Hasher
+from app.utils.hashing import Hasher
 
 class UserRepository:
     """
@@ -80,10 +80,12 @@ class UserRepository:
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail=f"User already exists with email: {user_create.email}"
                 )
+            hashed_password = Hasher.get_password_hash(user_create.password)
+
             user = User(
                 email=user_create.email,
                 full_name=user_create.full_name,
-                password=user_create.password
+                password=hashed_password
             )
             self.db.add(user)
             self.db.commit()

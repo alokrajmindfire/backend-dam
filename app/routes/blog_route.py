@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 from app.config.dbconf import SessionLocal
 from app.controllers.blog_controller import BlogController
 from app.schemas.blog_schema import BlogCreate, BlogUpdate, BlogResponse
+from app.middleware.auth_middleware import get_current_user
+from app.schemas.user_schema import UserResponse
 
 router = APIRouter(prefix="/blogs", tags=["Blogs"])
 
@@ -23,7 +25,7 @@ def get_db():
         db.close()
 
 @router.get("/", response_model=list[BlogResponse])
-def list_blogs(db: Session = Depends(get_db)):
+def list_blogs(db: Session = Depends(get_db),current_user: UserResponse = Depends(get_current_user)):
     """
     Retrieve a list of all blogs from the database.
 
@@ -41,7 +43,7 @@ def list_blogs(db: Session = Depends(get_db)):
     return controller.get_blogs()
 
 @router.get("/{blog_id}", response_model=BlogResponse)
-def get_blog(blog_id: int, db: Session = Depends(get_db)):
+def get_blog(blog_id: int, db: Session = Depends(get_db),current_user: UserResponse = Depends(get_current_user)):
     """
     Retrieve a specific blog by its ID.
 
@@ -62,7 +64,7 @@ def get_blog(blog_id: int, db: Session = Depends(get_db)):
     return blog
 
 @router.post("/", response_model=BlogResponse)
-def create_blog(blog_create: BlogCreate, db: Session = Depends(get_db)):
+def create_blog(blog_create: BlogCreate, db: Session = Depends(get_db),current_user: UserResponse = Depends(get_current_user)):
     """
     Create a new blog entry in the database.
 
@@ -78,7 +80,7 @@ def create_blog(blog_create: BlogCreate, db: Session = Depends(get_db)):
     return controller.create_blog(blog_create)
 
 @router.put("/{blog_id}", response_model=BlogResponse)
-def update_blog(blog_id: int, blog_update: BlogUpdate, db: Session = Depends(get_db)):
+def update_blog(blog_id: int, blog_update: BlogUpdate, db: Session = Depends(get_db),current_user: UserResponse = Depends(get_current_user)):
     """
     Update an existing blog post with new data.
 
@@ -100,7 +102,7 @@ def update_blog(blog_id: int, blog_update: BlogUpdate, db: Session = Depends(get
     return blog
 
 @router.delete("/{blog_id}", response_model=BlogResponse)
-def delete_blog(blog_id: int, db: Session = Depends(get_db)):
+def delete_blog(blog_id: int, db: Session = Depends(get_db),current_user: UserResponse = Depends(get_current_user)):
     """
     Delete a blog entry from the database.
 
