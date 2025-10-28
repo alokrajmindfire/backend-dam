@@ -29,11 +29,11 @@ class BlogController:
             logger.error(f"Controller error in get_blog({blog_id}): {e}")
             raise
 
-    def create_blog(self, blog_create: BlogCreate):
+    def create_blog(self, blog_create: BlogCreate,author_id:int):
         """Create a new blog entry."""
         try:
             logger.info(f"Controller: creating blog {blog_create.title}")
-            return self.blog_repository.create(blog_create)
+            return self.blog_repository.create(blog_create,author_id)
         except Exception as e:
             logger.error(f"Controller error in create_blog: {e}")
             raise

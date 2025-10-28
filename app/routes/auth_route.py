@@ -6,16 +6,9 @@ from app.schemas.auth_schema import Token, LoginSchema
 from app.config.config import settings
 from app.schemas.user_schema import UserCreate, UserUpdate, UserResponse
 from app.controllers.user_controller import UserController
+from app.config.dbconf import get_db
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 @router.post("/login", response_model=Token)

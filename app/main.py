@@ -6,9 +6,18 @@ from app.models import Base
 
 
 app = FastAPI(title="User CRUD API")
+
+origins = [
+    "http://localhost:8501",
+    "http://127.0.0.1:8501",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 Base.metadata.create_all(bind=engine)
 

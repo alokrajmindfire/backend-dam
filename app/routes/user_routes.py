@@ -5,24 +5,9 @@ from app.config.dbconf import SessionLocal
 from app.controllers.user_controller import UserController
 from app.schemas.user_schema import UserCreate, UserUpdate, UserResponse
 from app.middleware.auth_middleware import get_current_user
+from app.config.dbconf import get_db
 
 router = APIRouter(prefix="/users", tags=["Users"])
-
-def get_db():
-    """
-    Dependency function that provides a database session for request handling.
-
-    Yields:
-        Session: A SQLAlchemy session instance for interacting with the database.
-
-    Ensures:
-        The session is closed after the request completes, even if an exception occurs.
-    """
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 @router.get("/", response_model=list[UserResponse])
 def list_users(db: Session = Depends(get_db),current_user: UserResponse = Depends(get_current_user)):
