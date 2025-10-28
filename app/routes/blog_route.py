@@ -5,24 +5,9 @@ from app.controllers.blog_controller import BlogController
 from app.schemas.blog_schema import BlogCreate, BlogUpdate, BlogResponse
 from app.middleware.auth_middleware import get_current_user
 from app.schemas.user_schema import UserResponse
+from app.config.dbconf import get_db
 
 router = APIRouter(prefix="/blogs", tags=["Blogs"])
-
-def get_db():
-    """
-    Dependency function that provides a database session to FastAPI routes.
-
-    Yields:
-        db (Session): A SQLAlchemy Session instance for database operations.
-
-    Ensures that the database session is properly closed after the request
-    is processed, even if an exception occurs.
-    """
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 @router.get("/", response_model=list[BlogResponse])
 def list_blogs(db: Session = Depends(get_db),current_user: UserResponse = Depends(get_current_user)):
@@ -77,7 +62,10 @@ def create_blog(blog_create: BlogCreate, db: Session = Depends(get_db),current_u
         BlogResponse: The details of the newly created blog.
     """
     controller = BlogController(db)
-    return controller.create_blog(blog_create)
+    blog_data = blog_create.model_dump()
+    blog_data["author_id"] = current_user.id
+
+    return controller.create_blog(BlogCreate(**blog_data),author_id=current_user.id)
 
 @router.put("/{blog_id}", response_model=BlogResponse)
 def update_blog(blog_id: int, blog_update: BlogUpdate, db: Session = Depends(get_db),current_user: UserResponse = Depends(get_current_user)):
