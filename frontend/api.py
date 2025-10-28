@@ -27,13 +27,25 @@ def get_blogs():
     session = get_session()
     return session.get(f"{API_URL}/blogs/")
 
-def create_blog(title, content):
+def create_blog(title, slug, content):
     session = get_session()
-    return session.post(f"{API_URL}/blogs/", json={"title": title, "content": content})
+    payload = {
+        "title": title,
+        "slug": slug,
+        "content": content
+    }
+    return session.post(f"{API_URL}/blogs/", json=payload)
 
-def update_blog(blog_id, title, content):
+def update_blog(blog_id, title, slug, content):
+    """
+    slug may be empty. Only include slug in payload if provided (some backends don't expect it).
+    """
+    print("update_blog called with", blog_id, title, slug)
     session = get_session()
-    return session.put(f"{API_URL}/blogs/{blog_id}", json={"title": title, "content": content})
+    payload = {"title": title, "content": content}
+    if slug:
+        payload["slug"] = slug
+    return session.put(f"{API_URL}/blogs/{blog_id}", json=payload)
 
 def delete_blog(blog_id):
     session = get_session()

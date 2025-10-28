@@ -57,7 +57,7 @@ class BlogRepository:
             logger.exception(f"Error fetching blog {blog_id}: {e}")
             raise
 
-    def create(self, blog_create: BlogCreate):
+    def create(self, blog_create: BlogCreate,author_id: int):
         """
         Create a new blog entry in the database.
 
@@ -78,11 +78,12 @@ class BlogRepository:
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail=f"Blog with slug '{blog_create.slug}' already exists"
                 )
+            print("author_id: int",author_id)
             blog = Blog(
                 title=blog_create.title,
                 slug=blog_create.slug,
                 content=blog_create.content,
-                author_id=blog_create.author_id,
+                author_id=author_id,
             )
             self.db.add(blog)
             self.db.commit()

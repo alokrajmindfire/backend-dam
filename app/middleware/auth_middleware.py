@@ -2,15 +2,10 @@ from fastapi import Request, HTTPException, Depends
 from app.config.config import settings
 from sqlalchemy.orm import Session
 import jwt
-from app.config.dbconf import SessionLocal
+from app.config.dbconf import get_db
 from app.models.user_model import User
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+
 
 def get_current_user(request: Request, db: Session = Depends(get_db)):
     """

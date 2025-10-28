@@ -8,7 +8,7 @@ class BlogBase(BaseModel):
     content: Optional[str] = None
 
 class BlogCreate(BlogBase):
-    author_id: int
+    pass
 
 class BlogUpdate(BaseModel):
     title: Optional[str] = None
